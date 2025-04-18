@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Feedback Form</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+  <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+    <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Feedback</h1>
+
+    <form id="feedbackForm" class="space-y-5">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Name</label>
+        <input type="text" id="full_name" required placeholder="Full Name"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"/>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Address</label>
+        <input type="text" id="full_address" required placeholder="Address"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"/>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Phone No.</label>
+        <input type="tel" id="phone" required placeholder="Phone / Mobile"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"/>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Email Address</label>
+        <input type="email" id="email" required placeholder="Email ID"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"/>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Comments</label>
+        <textarea id="comment" required rows="4"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Your comments here..."></textarea>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <button type="submit" id="submitBtn"
+          class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition">Submit</button>
+        <button type="reset"
+          class="bg-gray-200 text-gray-800 px-6 py-2 rounded-md hover:bg-gray-300 transition">Reset</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("feedbackForm").addEventListener("submit", function(event) {
+      event.preventDefault(); // Prevent default form submission
+      
+      const formData = new FormData(event.target);
+      const feedbackData = Object.fromEntries(formData.entries());
+
+      fetch('http://localhost:8100/submit_feedback', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(feedbackData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert(data.message);
+        event.target.reset();
+      })
+      .catch(error => {
+        console.error("Error submitting feedback:", error);
+        alert("An error occurred while submitting feedback. Please try again later.");
+      });
+    });
+  </script>
+
+</body>
+</html>
